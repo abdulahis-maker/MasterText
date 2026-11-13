@@ -1,0 +1,1001 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Draft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Bell MT", "Times New Roman", serif;
+            background: #ffffff;
+            color: #263238;
+            --font-scale: 1;
+            margin: 0;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        body.font-small {
+            --font-scale: 0.9;
+        }
+
+        body.font-medium {
+            --font-scale: 1;
+        }
+
+        body.font-big {
+            --font-scale: 1.15;
+        }
+
+        .site-header {
+            min-height: 60px;
+            padding: 15px 35px;
+            border-bottom: 1px solid #eeeeee;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            position: relative;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: calc(27px * var(--font-scale));
+            font-weight: bold;
+            color: inherit;
+            white-space: nowrap;
+            text-decoration: none;
+            justify-self: start;
+        }
+
+        .brand .quill {
+            width: 27px;
+            height: 27px;
+            flex-shrink: 0;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-nav a {
+            color: inherit;
+            font-size: calc(18px * var(--font-scale));
+            font-family: "Bell MT", "Times New Roman", serif;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .main-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-dropdown,
+        .menu-wrap {
+            position: relative;
+        }
+
+        .nav-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            min-width: 470px;
+            padding: 18px;
+            background: #ffffff;
+            color: #263238;
+            border: 1px solid #dddddd;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            z-index: 20;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .nav-dropdown-content.show {
+            display: grid;
+        }
+
+        .dropdown-section h3 {
+            margin-bottom: 10px;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        .dropdown-section a {
+            display: block;
+            padding: 9px 7px;
+            color: #263238;
+            white-space: normal;
+        }
+
+        .dropdown-section a:hover {
+            background: #f2f2f2;
+            text-decoration: none;
+        }
+
+        .dropdown-section strong,
+        .dropdown-section span {
+            display: block;
+        }
+
+        .dropdown-section strong {
+            font-size: calc(15px * var(--font-scale));
+        }
+
+        .dropdown-section span {
+            margin-top: 3px;
+            color: #667078;
+            font-size: calc(13px * var(--font-scale));
+            line-height: 1.35;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-button {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #263238;
+            border-radius: 50%;
+            background: #ffffff;
+            color: #263238;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .icon-button:hover {
+            background: #f2f2f2;
+        }
+
+        .icon-button svg {
+            width: 23px;
+            height: 23px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 48px;
+            right: 0;
+            width: 210px;
+            padding: 15px;
+            background: #ffffff;
+            color: #263238;
+            border: 1px solid #dddddd;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            z-index: 20;
+        }
+
+        .dropdown.show {
+            display: block;
+        }
+
+        .dropdown p {
+            font-size: calc(17px * var(--font-scale));
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .dropdown a {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #dddddd;
+            color: inherit;
+            font-size: calc(16px * var(--font-scale));
+            text-decoration: none;
+        }
+
+        .dropdown a:hover {
+            text-decoration: underline;
+        }
+
+        .text-button {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px 0 0;
+            border: 0;
+            border-top: 1px solid #dddddd;
+            background: none;
+            color: inherit;
+            text-align: left;
+            font-family: inherit;
+            font-size: calc(16px * var(--font-scale));
+            cursor: pointer;
+        }
+
+        .setting-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        .setting-column {
+            align-items: flex-start;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+
+        .setting-line select {
+            width: 100%;
+            padding: 7px;
+            margin-top: 6px;
+            font-family: inherit;
+            font-size: calc(15px * var(--font-scale));
+            border: 1px solid #cccccc;
+            background: #ffffff;
+            color: #263238;
+        }
+
+        .setting-line input[type=checkbox] {
+            appearance: none;
+            width: 42px;
+            height: 23px;
+            background: #cccccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .setting-line input[type=checkbox]::before {
+            content: "";
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            left: 3px;
+            top: 3px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .setting-line input[type=checkbox]:checked {
+            background: #000000;
+        }
+
+        .setting-line input[type=checkbox]:checked::before {
+            transform: translateX(19px);
+        }
+
+        main {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 45px 45px 65px;
+        }
+
+        main h1 {
+            font-size: calc(36px * var(--font-scale));
+            font-weight: normal;
+            margin: 0 0 10px;
+        }
+
+        .page-description {
+            font-size: calc(18px * var(--font-scale));
+            color: #667078;
+            margin: 0 0 28px;
+        }
+
+        .editor-container {
+            width: 100%;
+        }
+
+        #draftText {
+            display: block;
+            width: 100%;
+            min-height: 65vh;
+            height: 650px;
+            max-height: 1000px;
+            padding: 30px;
+            border: 1px solid #263238;
+            border-radius: 4px;
+            background: #ffffff;
+            color: #263238;
+            font-family: "Bell MT", "Times New Roman", serif;
+            font-size: calc(19px * var(--font-scale));
+            line-height: 1.8;
+            resize: vertical;
+            outline: none;
+            transition: background 0.2s, color 0.2s, border 0.2s;
+        }
+
+        #draftText:focus {
+            border-width: 2px;
+        }
+
+        #draftText::placeholder {
+            color: #92999e;
+        }
+
+        #wordCount {
+            text-align: right;
+            font-size: calc(15px * var(--font-scale));
+            color: #667078;
+            margin: 12px 2px 0;
+        }
+
+        .editor-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 22px;
+        }
+
+        #submitButton {
+            min-width: 145px;
+            padding: 13px 30px;
+            border: 1px solid #263238;
+            border-radius: 3px;
+            background: #263238;
+            color: #ffffff;
+            font-family: "Bell MT", "Times New Roman", serif;
+            font-size: calc(17px * var(--font-scale));
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        #submitButton:hover {
+            background: #ffffff;
+            color: #263238;
+        }
+
+        body.dark-mode {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .site-header {
+            border-color: #292929;
+        }
+
+        body.dark-mode .icon-button {
+            background: #000000;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        body.dark-mode .icon-button:hover {
+            background: #292929;
+        }
+
+        body.dark-mode .dropdown,
+        body.dark-mode .nav-dropdown-content {
+            background: #111111;
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .dropdown-section a,
+        body.dark-mode .dropdown a,
+        body.dark-mode .text-button {
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .dropdown-section span {
+            color: #c4c4c4;
+        }
+
+        body.dark-mode .dropdown-section a:hover {
+            background: #292929;
+        }
+
+        body.dark-mode .setting-line select {
+            background: #111111;
+            color: #ffffff;
+            border-color: #444444;
+        }
+
+        body.dark-mode .setting-line input[type=checkbox] {
+            background: #555555;
+        }
+
+        body.dark-mode .setting-line input[type=checkbox]:checked {
+            background: #ffffff;
+        }
+
+        body.dark-mode .setting-line input[type=checkbox]:checked::before {
+            background: #000000;
+        }
+
+        body.dark-mode .page-description,
+        body.dark-mode #wordCount {
+            color: #bdbdbd;
+        }
+
+        body.dark-mode #draftText {
+            background: #000000;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        body.dark-mode #draftText::placeholder {
+            color: #888888;
+        }
+
+        body.dark-mode #submitButton {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        body.dark-mode #submitButton:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        @media (max-width: 800px) {
+            .site-header {
+                grid-template-columns: 1fr auto;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .brand {
+                font-size: calc(24px * var(--font-scale));
+            }
+
+            .main-nav {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+
+            .main-nav a {
+                font-size: calc(16px * var(--font-scale));
+            }
+
+            .header-actions {
+                grid-column: 2;
+                grid-row: 1;
+                gap: 8px;
+            }
+
+            .icon-button {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-dropdown-content {
+                min-width: min(470px, calc(100vw - 30px));
+            }
+
+            main {
+                padding: 35px 25px 50px;
+            }
+
+            #draftText {
+                min-height: 60vh;
+                height: 550px;
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                font-size: calc(21px * var(--font-scale));
+            }
+
+            .main-nav {
+                gap: 12px;
+            }
+
+            .main-nav a {
+                font-size: calc(14px * var(--font-scale));
+            }
+
+            main {
+                padding: 30px 18px 45px;
+            }
+
+            #draftText {
+                min-height: 55vh;
+                height: 450px;
+                padding: 17px;
+            }
+
+            .nav-dropdown-content {
+                grid-template-columns: 1fr;
+                min-width: min(320px, calc(100vw - 30px));
+            }
+
+            .editor-footer {
+                justify-content: stretch;
+            }
+
+            #submitButton {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <a class="brand" href="home.html">
+        <svg class="quill" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M26.8 3.2C17.4 3.5 8.1 8.3 7.2 17.1c-.3 2.7.8 4.7 2.5 5.9C17.4 19.1 24.2 11.5 26.8 3.2Z"
+                fill="none" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M4.2 28.1c4.3-7.7 10.4-13.8 18.7-20.2M9.5 22.9l-1.2-6.1M13.4 18.8l5.7 1.1"
+                fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        <span>MasterText</span>
+    </a>
+
+    <nav class="main-nav">
+
+        <div class="nav-dropdown">
+
+            <a href="home.html" class="nav-menu-link" id="homeButton">
+                Home
+            </a>
+
+            <div class="nav-dropdown-content" id="homeDropdown">
+
+                <div class="dropdown-section">
+                    <h3>Learning Activities</h3>
+
+                    <a href="models.html">
+                        <strong>Model Answers</strong>
+                        <span>Explore examples of different writing text types.</span>
+                    </a>
+
+                    <a href="guides.html">
+                        <strong>English Guides</strong>
+                        <span>Learn about grammar, vocabulary and writing techniques.</span>
+                    </a>
+
+                    <a href="Do's and Don'ts.html">
+                        <strong>Dos and Don'ts</strong>
+                        <span>Discover useful ways to improve your writing.</span>
+                    </a>
+
+                    <a href="challenge.html">
+                        <strong>Writing Challenges</strong>
+                        <span>Challenge yourself with different writing tasks.</span>
+                    </a>
+                </div>
+
+                <div class="dropdown-section">
+                    <h3>My Writing</h3>
+
+                    <a href="new-drafts.html">
+                        <strong>Create a New Draft</strong>
+                        <span>Start writing and develop your own ideas.</span>
+                    </a>
+
+                    <a href="drafts.html">
+                        <strong>My Drafts</strong>
+                        <span>View and continue working on your saved writing.</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contacts.html">Contact</a>
+
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="menu-wrap">
+
+            <button class="icon-button" id="profileButton"
+                type="button" aria-label="Profile">
+
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="3.5"/>
+                    <path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>
+                </svg>
+
+            </button>
+
+            <div class="dropdown profile-menu" id="profileMenu">
+
+                <p id="profileName">Guest</p>
+
+                <a href="login.html" id="loginLink">Log in</a>
+
+                <button type="button" id="logoutButton"
+                    class="text-button" hidden>
+                    Log out
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="menu-wrap">
+
+            <button class="icon-button" id="settingsButton"
+                type="button" aria-label="Settings">
+
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l-1.8 1.8a1.7 1.7 0 0 0-2-.3 1.7 1.7 0 0 0-1 1.5h-2.6a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-2 .3l-1.8-1.8a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H6.3v-2.6a1.7 1.7 0 0 0 1.7-1 1.7 1.7 0 0 0-.3-1.9l1.8-1.8a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5H15a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l1.8 1.8a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1v2.6a1.7 1.7 0 0 0-1.5 1Z"/>
+                </svg>
+
+            </button>
+
+            <div class="dropdown settings-menu" id="settingsMenu">
+
+                <p>Settings</p>
+
+                <div class="setting-line">
+                    <label for="themeToggle">Dark mode</label>
+                    <input type="checkbox" id="themeToggle">
+                </div>
+
+                <div class="setting-line setting-column">
+                    <label for="fontSize">Font size</label>
+
+                    <select id="fontSize">
+                        <option value="font-small">Small</option>
+                        <option value="font-medium" selected>Medium</option>
+                        <option value="font-big">Large</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main>
+
+    <h1 id="pageTitle">New Draft</h1>
+
+    <p class="page-description" id="pageDescription">
+        Start writing and develop your ideas.
+    </p>
+
+    <div class="editor-container">
+
+        <textarea
+            id="draftText"
+            placeholder="Start writing here..."
+            aria-label="Write your draft"
+            spellcheck="true"></textarea>
+
+        <p id="wordCount">Word count: 0</p>
+
+    </div>
+
+    <div class="editor-footer">
+
+        <button type="button" id="submitButton">
+            Submit
+        </button>
+
+    </div>
+
+</main>
+
+<script>
+    const textArea = document.getElementById("draftText");
+    const submitButton = document.getElementById("submitButton");
+    const wordCount = document.getElementById("wordCount");
+    const pageTitle = document.getElementById("pageTitle");
+    const pageDescription = document.getElementById("pageDescription");
+
+    const homeButton = document.getElementById("homeButton");
+    const homeDropdown = document.getElementById("homeDropdown");
+
+    const profileButton = document.getElementById("profileButton");
+    const profileMenu = document.getElementById("profileMenu");
+
+    const settingsButton = document.getElementById("settingsButton");
+    const settingsMenu = document.getElementById("settingsMenu");
+
+    const profileName = document.getElementById("profileName");
+    const loginLink = document.getElementById("loginLink");
+    const logoutButton = document.getElementById("logoutButton");
+
+    const themeToggle = document.getElementById("themeToggle");
+    const fontSize = document.getElementById("fontSize");
+
+    const STORAGE_KEY = "masterTextDrafts";
+
+    const params = new URLSearchParams(window.location.search);
+
+    let draftId = params.get("draft");
+
+    if (!draftId) {
+        draftId = (window.crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : Date.now().toString() +
+              Math.random().toString(36).slice(2);
+
+        params.set("draft", draftId);
+
+        window.history.replaceState(
+            {},
+            "",
+            window.location.pathname + "?" + params.toString()
+        );
+    }
+
+    function getDrafts() {
+        try {
+            const drafts = JSON.parse(
+                localStorage.getItem(STORAGE_KEY) || "[]"
+            );
+
+            return Array.isArray(drafts) ? drafts : [];
+
+        } catch (error) {
+            console.error("Unable to retrieve drafts:", error);
+            return [];
+        }
+    }
+
+    function saveDrafts(drafts) {
+        try {
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(drafts)
+            );
+
+            return true;
+
+        } catch (error) {
+            console.error("Unable to save drafts:", error);
+
+            alert(
+                "Your draft could not be saved. Please check your browser storage."
+            );
+
+            return false;
+        }
+    }
+
+    function updateWordCount() {
+        const text = textArea.value.trim();
+
+        const words = text === ""
+            ? 0
+            : text.split(/\s+/).length;
+
+        wordCount.textContent = "Word count: " + words;
+    }
+
+    function loadDraft() {
+        const drafts = getDrafts();
+
+        const draft = drafts.find(item =>
+            item && String(item.id) === String(draftId)
+        );
+
+        if (draft) {
+            textArea.value = draft.content || "";
+            pageTitle.textContent = "Edit Draft";
+            pageDescription.textContent =
+                "Continue working on your saved writing.";
+            submitButton.textContent = "Save Changes";
+        } else {
+            pageTitle.textContent = "New Draft";
+            pageDescription.textContent =
+                "Start writing and develop your ideas.";
+            submitButton.textContent = "Submit";
+        }
+
+        updateWordCount();
+    }
+
+    function saveCurrentDraft() {
+        const drafts = getDrafts();
+
+        let draft = drafts.find(item =>
+            item && String(item.id) === String(draftId)
+        );
+
+        if (!draft) {
+            draft = {
+                id: draftId,
+                title: "Untitled Draft",
+                content: ""
+            };
+
+            drafts.push(draft);
+        }
+
+        draft.content = textArea.value;
+
+        const firstLine = textArea.value
+            .split("\n")
+            .find(line => line.trim() !== "");
+
+        draft.title = firstLine
+            ? firstLine.trim().slice(0, 40)
+            : "Untitled Draft";
+
+        return saveDrafts(drafts);
+    }
+
+    textArea.addEventListener("input", function() {
+        updateWordCount();
+        saveCurrentDraft();
+    });
+
+    submitButton.addEventListener("click", function() {
+        if (saveCurrentDraft()) {
+            window.location.href = "drafts.html";
+        }
+    });
+
+    function closeMenus() {
+        homeDropdown.classList.remove("show");
+        profileMenu.classList.remove("show");
+        settingsMenu.classList.remove("show");
+    }
+
+    homeButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isOpen = homeDropdown.classList.contains("show");
+
+        closeMenus();
+
+        if (!isOpen) {
+            homeDropdown.classList.add("show");
+        }
+    });
+
+    profileButton.addEventListener("click", function(event) {
+        event.stopPropagation();
+
+        const isOpen = profileMenu.classList.contains("show");
+
+        closeMenus();
+
+        if (!isOpen) {
+            profileMenu.classList.add("show");
+        }
+    });
+
+    settingsButton.addEventListener("click", function(event) {
+        event.stopPropagation();
+
+        const isOpen = settingsMenu.classList.contains("show");
+
+        closeMenus();
+
+        if (!isOpen) {
+            settingsMenu.classList.add("show");
+        }
+    });
+
+    document.addEventListener("click", function(event) {
+        if (
+            !homeDropdown.contains(event.target) &&
+            !homeButton.contains(event.target) &&
+            !profileMenu.contains(event.target) &&
+            !profileButton.contains(event.target) &&
+            !settingsMenu.contains(event.target) &&
+            !settingsButton.contains(event.target)
+        ) {
+            closeMenus();
+        }
+    });
+
+    function updateProfile() {
+        const currentUser =
+            sessionStorage.getItem("masterTextUser");
+
+        const savedName =
+            localStorage.getItem("masterTextName");
+
+        if (currentUser) {
+            profileName.textContent = savedName || currentUser;
+            loginLink.hidden = true;
+            logoutButton.hidden = false;
+        } else {
+            profileName.textContent = "Guest";
+            loginLink.hidden = false;
+            logoutButton.hidden = true;
+        }
+    }
+
+    logoutButton.addEventListener("click", function() {
+        sessionStorage.removeItem("masterTextUser");
+        window.location.href = "login.html";
+    });
+
+    function applySettings() {
+        const savedTheme =
+            localStorage.getItem("masterTextDarkMode");
+
+        const savedFontSize =
+            localStorage.getItem("masterTextFontSize") ||
+            "font-medium";
+
+        const validFontSizes = [
+            "font-small",
+            "font-medium",
+            "font-big"
+        ];
+
+        const selectedFontSize = validFontSizes.includes(savedFontSize)
+            ? savedFontSize
+            : "font-medium";
+
+        document.body.classList.toggle(
+            "dark-mode",
+            savedTheme === "true"
+        );
+
+        document.body.classList.remove(
+            "font-small",
+            "font-medium",
+            "font-big"
+        );
+
+        document.body.classList.add(selectedFontSize);
+
+        themeToggle.checked = savedTheme === "true";
+        fontSize.value = selectedFontSize;
+    }
+
+    themeToggle.addEventListener("change", function() {
+        localStorage.setItem(
+            "masterTextDarkMode",
+            themeToggle.checked ? "true" : "false"
+        );
+
+        applySettings();
+    });
+
+    fontSize.addEventListener("change", function() {
+        localStorage.setItem(
+            "masterTextFontSize",
+            fontSize.value
+        );
+
+        applySettings();
+    });
+
+    loadDraft();
+    updateProfile();
+    applySettings();
+</script>
+
+</body>
+</html>

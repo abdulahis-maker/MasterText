@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <style>
+        :root {
+            --font-scale: 1;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Bell MT", serif;
+            color: #263238;
+            background: white;
+            font-size: calc(16px * var(--font-scale));
+            transition: background 0.2s, color 0.2s;
+        }
+
+        body.dark-mode {
+            background: #000;
+            color: white;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 520px;
+            padding: 45px;
+            box-sizing: border-box;
+        }
+
+        .login-container h1 {
+            font-size: calc(38px * var(--font-scale));
+            font-weight: normal;
+            text-align: center;
+            margin: 0 0 45px;
+        }
+
+        .login-form {
+            width: 100%;
+        }
+
+        .login-form label {
+            display: block;
+            font-size: calc(19px * var(--font-scale));
+            margin-bottom: 10px;
+        }
+
+        .login-form input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px;
+            margin-bottom: 28px;
+            border: 1px solid #b8bec5;
+            border-radius: 4px;
+            background: white;
+            color: #263238;
+            font-family: "Bell MT", serif;
+            font-size: calc(18px * var(--font-scale));
+            outline: none;
+        }
+
+        .login-form input:focus {
+            border-color: #263238;
+        }
+
+        .passcode-container {
+            position: relative;
+        }
+
+        .passcode-container input {
+            padding-right: 75px;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            border: none;
+            background: transparent;
+            color: #263238;
+            font-family: "Bell MT", serif;
+            cursor: pointer;
+            font-size: calc(15px * var(--font-scale));
+        }
+
+        .login-button,
+        .guest-button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 12px;
+            font-family: "Bell MT", serif;
+            font-size: calc(18px * var(--font-scale));
+            cursor: pointer;
+            border: 1px solid #263238;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .login-button {
+            background: #263238;
+            color: white;
+        }
+
+        .login-button:hover {
+            background: #455a64;
+        }
+
+        .guest-button {
+            background: white;
+            color: #263238;
+        }
+
+        .guest-button:hover {
+            background: #e5e7eb;
+        }
+
+        #message {
+            display: none;
+            margin-top: 18px;
+            font-size: calc(15px * var(--font-scale));
+            color: #b3261e;
+            text-align: center;
+        }
+
+        body.dark-mode .login-form input {
+            background: #111;
+            color: white;
+            border-color: #555;
+        }
+
+        body.dark-mode .login-form input:focus {
+            border-color: white;
+        }
+
+        body.dark-mode .show-password {
+            color: white;
+        }
+
+        body.dark-mode .login-button {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        body.dark-mode .login-button:hover {
+            background: #ddd;
+        }
+
+        body.dark-mode .guest-button {
+            background: #111;
+            color: white;
+            border-color: #555;
+        }
+
+        body.dark-mode .guest-button:hover {
+            background: #292929;
+        }
+
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 25px;
+            }
+
+            .login-container h1 {
+                font-size: calc(32px * var(--font-scale));
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <h1>Welcome to MasterText</h1>
+
+        <form class="login-form" id="loginForm">
+
+            <label for="name">Name</label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                autocomplete="name"
+                required
+            >
+
+            <label for="passcode">Passcode</label>
+
+            <div class="passcode-container">
+
+                <input
+                    type="password"
+                    id="passcode"
+                    name="passcode"
+                    placeholder="Enter your passcode"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="show-password"
+                    id="showPassword"
+                    aria-label="Show password"
+                >
+                    Show
+                </button>
+
+            </div>
+
+            <button type="submit" class="login-button">
+                Log In
+            </button>
+
+            <button
+                type="button"
+                class="guest-button"
+                id="continueGuest"
+            >
+                Continue as Guest
+            </button>
+
+            <div id="message" role="alert" aria-live="polite"></div>
+
+        </form>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const darkMode =
+                localStorage.getItem("masterTextDarkMode") === "true";
+
+            if (darkMode) {
+                document.body.classList.add("dark-mode");
+            }
+
+            const savedFontSize =
+                localStorage.getItem("masterTextFontSize") || "font-medium";
+
+            const fontSizes = {
+                "font-small": "0.9",
+                "font-medium": "1",
+                "font-big": "1.15"
+            };
+
+            document.documentElement.style.setProperty(
+                "--font-scale",
+                fontSizes[savedFontSize] || "1"
+            );
+
+            const passcode = document.getElementById("passcode");
+
+            const showPassword =
+                document.getElementById("showPassword");
+
+            showPassword.addEventListener("click", function () {
+
+                const isHidden = passcode.type === "password";
+
+                passcode.type = isHidden ? "text" : "password";
+
+                showPassword.textContent = isHidden ? "Hide" : "Show";
+
+                showPassword.setAttribute(
+                    "aria-label",
+                    isHidden ? "Hide password" : "Show password"
+                );
+
+            });
+
+            function continueToHome(name) {
+
+                localStorage.setItem("masterTextName", name);
+
+                sessionStorage.setItem("masterTextUser", name);
+
+                window.location.href = "home.html";
+
+            }
+
+            const loginForm = document.getElementById("loginForm");
+
+            loginForm.addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                const name =
+                    document.getElementById("name").value.trim();
+
+                const code = passcode.value.trim();
+
+                const message =
+                    document.getElementById("message");
+
+                if (!name || !code) {
+
+                    message.textContent =
+                        "Please enter your name and passcode.";
+
+                    message.style.display = "block";
+
+                    return;
+
+                }
+
+                message.style.display = "none";
+
+                continueToHome(name);
+
+            });
+
+            const continueGuest =
+                document.getElementById("continueGuest");
+
+            continueGuest.addEventListener("click", function () {
+
+                localStorage.setItem("masterTextName", "Guest");
+
+                sessionStorage.removeItem("masterTextUser");
+
+                window.location.href = "home.html";
+
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

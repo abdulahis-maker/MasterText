@@ -1,0 +1,1133 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Drafts</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Bell MT", "Times New Roman", serif;
+            background: #ffffff;
+            color: #263238;
+            --font-scale: 1;
+            transition: background 0.2s, color 0.2s;
+            margin: 0;
+        }
+
+        body.font-small {
+            --font-scale: 0.9;
+        }
+
+        body.font-medium {
+            --font-scale: 1;
+        }
+
+        body.font-big {
+            --font-scale: 1.15;
+        }
+
+        .site-header {
+            min-height: 60px;
+            padding: 15px 35px;
+            border-bottom: 1px solid #eeeeee;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            position: relative;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: calc(27px * var(--font-scale));
+            font-weight: bold;
+            color: inherit;
+            white-space: nowrap;
+            text-decoration: none;
+            justify-self: start;
+        }
+
+        .brand .quill {
+            width: 27px;
+            height: 27px;
+            flex-shrink: 0;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-nav a {
+            color: inherit;
+            font-size: calc(18px * var(--font-scale));
+            font-family: "Bell MT", "Times New Roman", serif;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .main-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-dropdown,
+        .menu-wrap {
+            position: relative;
+        }
+
+        .nav-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            min-width: 470px;
+            padding: 18px;
+            background: #ffffff;
+            color: #263238;
+            border: 1px solid #dddddd;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            z-index: 20;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .nav-dropdown-content.show {
+            display: grid;
+        }
+
+        .dropdown-section h3 {
+            margin-bottom: 10px;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        .dropdown-section a {
+            display: block;
+            padding: 9px 7px;
+            color: #263238;
+            white-space: normal;
+        }
+
+        .dropdown-section a:hover {
+            background: #f2f2f2;
+            text-decoration: none;
+        }
+
+        .dropdown-section strong,
+        .dropdown-section span {
+            display: block;
+        }
+
+        .dropdown-section strong {
+            font-size: calc(15px * var(--font-scale));
+        }
+
+        .dropdown-section span {
+            margin-top: 3px;
+            color: #667078;
+            font-size: calc(13px * var(--font-scale));
+            line-height: 1.35;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-button {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #263238;
+            border-radius: 50%;
+            background: #ffffff;
+            color: #263238;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .icon-button:hover {
+            background: #f2f2f2;
+        }
+
+        .icon-button svg {
+            width: 23px;
+            height: 23px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 48px;
+            right: 0;
+            width: 210px;
+            padding: 15px;
+            background: #ffffff;
+            color: #263238;
+            border: 1px solid #dddddd;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            z-index: 20;
+        }
+
+        .dropdown.show {
+            display: block;
+        }
+
+        .dropdown p {
+            font-size: calc(17px * var(--font-scale));
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .dropdown a {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #dddddd;
+            color: inherit;
+            font-size: calc(16px * var(--font-scale));
+            text-decoration: none;
+        }
+
+        .dropdown a:hover {
+            text-decoration: underline;
+        }
+
+        .text-button {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px 0 0;
+            border: 0;
+            border-top: 1px solid #dddddd;
+            background: none;
+            color: inherit;
+            text-align: left;
+            font-family: inherit;
+            font-size: calc(16px * var(--font-scale));
+            cursor: pointer;
+        }
+
+        .setting-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        .setting-column {
+            align-items: flex-start;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+
+        .setting-line select {
+            width: 100%;
+            padding: 7px;
+            margin-top: 6px;
+            font-family: inherit;
+            font-size: calc(15px * var(--font-scale));
+            border: 1px solid #cccccc;
+            background: #ffffff;
+            color: #263238;
+        }
+
+        .setting-line input[type=checkbox] {
+            appearance: none;
+            width: 42px;
+            height: 23px;
+            background: #cccccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .setting-line input[type=checkbox]::before {
+            content: "";
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            left: 3px;
+            top: 3px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .setting-line input[type=checkbox]:checked {
+            background: #000000;
+        }
+
+        .setting-line input[type=checkbox]:checked::before {
+            transform: translateX(19px);
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 55px 45px 80px;
+        }
+
+        main h1 {
+            font-size: calc(38px * var(--font-scale));
+            font-weight: normal;
+            margin: 0 0 12px;
+        }
+
+        .drafts-description {
+            font-size: calc(18px * var(--font-scale));
+            color: #667078;
+            margin: 0 0 35px;
+        }
+
+        .drafts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 22px;
+        }
+
+        .draft-card {
+            min-height: 175px;
+            padding: 24px;
+            border: 1px solid #263238;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #263238;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .draft-card:hover {
+            transform: translateY(-4px);
+            background: #f8f8f8;
+        }
+
+        .draft-card:focus-visible {
+            outline: 2px solid #263238;
+            outline-offset: 4px;
+        }
+
+        .draft-title {
+            font-size: calc(22px * var(--font-scale));
+            font-weight: bold;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .word-count {
+            font-size: calc(15px * var(--font-scale));
+            color: #667078;
+            margin: 25px 0 0;
+        }
+
+        .draft-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .draft-action {
+            padding: 7px 13px;
+            border: 1px solid #263238;
+            border-radius: 3px;
+            background: transparent;
+            color: #263238;
+            font-family: inherit;
+            font-size: calc(14px * var(--font-scale));
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .draft-action:hover {
+            background: #263238;
+            color: #ffffff;
+        }
+
+        .new-draft {
+            justify-content: center;
+            align-items: center;
+            font-size: calc(55px * var(--font-scale));
+            font-weight: normal;
+        }
+
+        .new-draft:hover {
+            background: #f2f2f2;
+        }
+
+        .empty-message {
+            grid-column: 1 / -1;
+            padding: 35px 20px;
+            border: 1px dashed #aaaaaa;
+            text-align: center;
+            color: #667078;
+            font-size: calc(18px * var(--font-scale));
+        }
+
+        body.dark-mode {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .site-header {
+            border-color: #292929;
+        }
+
+        body.dark-mode .icon-button {
+            background: #000000;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        body.dark-mode .icon-button:hover {
+            background: #292929;
+        }
+
+        body.dark-mode .dropdown,
+        body.dark-mode .nav-dropdown-content {
+            background: #111111;
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .dropdown-section a,
+        body.dark-mode .dropdown a,
+        body.dark-mode .text-button {
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .dropdown-section span {
+            color: #c4c4c4;
+        }
+
+        body.dark-mode .dropdown-section a:hover {
+            background: #292929;
+        }
+
+        body.dark-mode .setting-line select {
+            background: #111111;
+            color: #ffffff;
+            border-color: #444444;
+        }
+
+        body.dark-mode .setting-line input[type=checkbox] {
+            background: #555555;
+        }
+
+        body.dark-mode .setting-line input[type=checkbox]:checked {
+            background: #ffffff;
+        }
+
+        body.dark-mode .setting-line input[type=checkbox]:checked::before {
+            background: #000000;
+        }
+
+        body.dark-mode .drafts-description,
+        body.dark-mode .word-count {
+            color: #bdbdbd;
+        }
+
+        body.dark-mode .draft-card {
+            background: #000000;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        body.dark-mode .draft-card:hover {
+            background: #171717;
+        }
+
+        body.dark-mode .draft-card:focus-visible {
+            outline-color: #ffffff;
+        }
+
+        body.dark-mode .draft-action {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        body.dark-mode .draft-action:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        body.dark-mode .empty-message {
+            color: #bdbdbd;
+            border-color: #666666;
+        }
+
+        @media (max-width: 800px) {
+            .site-header {
+                grid-template-columns: 1fr auto;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .brand {
+                font-size: calc(24px * var(--font-scale));
+            }
+
+            .main-nav {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+
+            .main-nav a {
+                font-size: calc(16px * var(--font-scale));
+            }
+
+            .header-actions {
+                grid-column: 2;
+                grid-row: 1;
+                gap: 8px;
+            }
+
+            .icon-button {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-dropdown-content {
+                min-width: min(470px, calc(100vw - 30px));
+            }
+
+            main {
+                padding: 40px 25px 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                font-size: calc(21px * var(--font-scale));
+            }
+
+            .main-nav {
+                gap: 12px;
+            }
+
+            .main-nav a {
+                font-size: calc(14px * var(--font-scale));
+            }
+
+            main {
+                padding: 35px 18px 50px;
+            }
+
+            .drafts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-dropdown-content {
+                grid-template-columns: 1fr;
+                min-width: min(320px, calc(100vw - 30px));
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <a class="brand" href="home.html">
+        <svg class="quill" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M26.8 3.2C17.4 3.5 8.1 8.3 7.2 17.1c-.3 2.7.8 4.7 2.5 5.9C17.4 19.1 24.2 11.5 26.8 3.2Z"
+                fill="none" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M4.2 28.1c4.3-7.7 10.4-13.8 18.7-20.2M9.5 22.9l-1.2-6.1M13.4 18.8l5.7 1.1"
+                fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        <span>MasterText</span>
+    </a>
+
+    <nav class="main-nav">
+
+        <div class="nav-dropdown">
+            <a href="home.html" class="nav-menu-link" id="homeButton">Home</a>
+
+            <div class="nav-dropdown-content" id="homeDropdown">
+
+                <div class="dropdown-section">
+                    <h3>Learning Activities</h3>
+
+                    <a href="home.html">
+                        <strong>Home Page</strong>
+                        <span>Where the learning all starts.</span>
+                    </a>
+
+                    <a href="models.html">
+                        <strong>Model Answers</strong>
+                        <span>Explore examples of different writing text types.</span>
+                    </a>
+
+                    <a href="guides.html">
+                        <strong>English Guides</strong>
+                        <span>Learn about grammar, vocabulary and writing techniques.</span>
+                    </a>
+
+                    <a href="Do's and Don'ts.html">
+                        <strong>Dos and Don'ts</strong>
+                        <span>Discover useful ways to improve your writing.</span>
+                    </a>
+
+                    <a href="challenge.html">
+                        <strong>Writing Challenges</strong>
+                        <span>Challenge yourself with different writing tasks.</span>
+                    </a>
+                </div>
+
+                <div class="dropdown-section">
+                    <h3>My Writing</h3>
+
+                    <a href="new-drafts.html">
+                        <strong>Create a New Draft</strong>
+                        <span>Start writing and develop your own ideas.</span>
+                    </a>
+
+                    <a href="drafts.html">
+                        <strong>My Drafts</strong>
+                        <span>View and continue working on your saved writing.</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contacts.html">Contact</a>
+
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="menu-wrap">
+
+            <button class="icon-button" id="profileButton" type="button" aria-label="Profile">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="3.5"/>
+                    <path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>
+                </svg>
+            </button>
+
+            <div class="dropdown profile-menu" id="profileMenu">
+                <p id="profileName">Guest</p>
+
+                <a href="login.html" id="loginLink">Log in</a>
+
+                <button type="button" id="logoutButton" class="text-button" hidden>
+                    Log out
+                </button>
+            </div>
+
+        </div>
+
+        <div class="menu-wrap">
+
+            <button class="icon-button" id="settingsButton" type="button" aria-label="Settings">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l-1.8 1.8a1.7 1.7 0 0 0-2-.3 1.7 1.7 0 0 0-1 1.5h-2.6a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-2 .3l-1.8-1.8a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H6.3v-2.6a1.7 1.7 0 0 0 1.7-1 1.7 1.7 0 0 0-.3-1.9l1.8-1.8a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5H15a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l1.8 1.8a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1v2.6a1.7 1.7 0 0 0-1.5 1Z"/>
+                </svg>
+            </button>
+
+            <div class="dropdown settings-menu" id="settingsMenu">
+
+                <p>Settings</p>
+
+                <div class="setting-line">
+                    <label for="themeToggle">Dark mode</label>
+                    <input type="checkbox" id="themeToggle">
+                </div>
+
+                <div class="setting-line setting-column">
+                    <label for="fontSize">Font size</label>
+
+                    <select id="fontSize">
+                        <option value="font-small">Small</option>
+                        <option value="font-medium" selected>Medium</option>
+                        <option value="font-big">Large</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main>
+
+    <h1>My Drafts</h1>
+
+    <p class="drafts-description">
+        Continue working on your saved writing or start something new.
+    </p>
+
+    <div class="drafts-container" id="draftsContainer"></div>
+
+</main>
+
+<script>
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const draftsContainer = document.getElementById("draftsContainer");
+
+    const homeButton = document.getElementById("homeButton");
+    const homeDropdown = document.getElementById("homeDropdown");
+
+    const profileButton = document.getElementById("profileButton");
+    const profileMenu = document.getElementById("profileMenu");
+
+    const settingsButton = document.getElementById("settingsButton");
+    const settingsMenu = document.getElementById("settingsMenu");
+
+    const profileName = document.getElementById("profileName");
+    const loginLink = document.getElementById("loginLink");
+    const logoutButton = document.getElementById("logoutButton");
+
+    const themeToggle = document.getElementById("themeToggle");
+    const fontSize = document.getElementById("fontSize");
+
+    const STORAGE_KEY = "masterTextDrafts";
+
+
+    function getDrafts() {
+        try {
+            const savedDrafts = JSON.parse(
+                localStorage.getItem(STORAGE_KEY) || "[]"
+            );
+
+            return Array.isArray(savedDrafts) ? savedDrafts : [];
+
+        } catch (error) {
+            console.error("Could not read saved drafts:", error);
+            return [];
+        }
+    }
+
+
+    function saveDrafts(drafts) {
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(drafts)
+        );
+    }
+
+
+    function countWords(content) {
+        const trimmedContent = String(content || "").trim();
+
+        return trimmedContent === ""
+            ? 0
+            : trimmedContent.split(/\s+/).length;
+    }
+
+
+    function openDraft(id) {
+        window.location.href =
+            "new-drafts.html?draft=" + encodeURIComponent(id);
+    }
+
+
+    function renameDraft(id) {
+
+        const drafts = getDrafts();
+
+        const draft = drafts.find(savedDraft =>
+            String(savedDraft.id) === String(id)
+        );
+
+        if (!draft) return;
+
+        const newName = prompt(
+            "Enter a new name for your draft:",
+            draft.title || "Untitled Draft"
+        );
+
+        if (newName === null) return;
+
+        const trimmedName = newName.trim();
+
+        if (trimmedName === "") {
+            alert("Please enter a name for your draft.");
+            return;
+        }
+
+        draft.title = trimmedName;
+
+        saveDrafts(drafts);
+
+        displayDrafts();
+    }
+
+
+    function deleteDraft(id) {
+
+        const drafts = getDrafts();
+
+        const draft = drafts.find(savedDraft =>
+            String(savedDraft.id) === String(id)
+        );
+
+        if (!draft) return;
+
+        const confirmed = confirm(
+            'Are you sure you want to delete "' +
+            (draft.title || "Untitled Draft") +
+            '"? This action cannot be undone.'
+        );
+
+        if (!confirmed) return;
+
+        const updatedDrafts = drafts.filter(savedDraft =>
+            String(savedDraft.id) !== String(id)
+        );
+
+        saveDrafts(updatedDrafts);
+
+        displayDrafts();
+    }
+
+
+    function displayDrafts() {
+
+        const allDrafts = getDrafts();
+
+        const visibleDrafts = allDrafts.filter(draft =>
+            draft &&
+            draft.id !== undefined &&
+            String(draft.content || "").trim() !== ""
+        );
+
+        draftsContainer.innerHTML = "";
+
+        if (visibleDrafts.length === 0) {
+
+            const emptyMessage = document.createElement("div");
+
+            emptyMessage.className = "empty-message";
+            emptyMessage.textContent =
+                "You haven't saved any drafts yet. Create a new draft to get started.";
+
+            draftsContainer.appendChild(emptyMessage);
+        }
+
+
+        visibleDrafts.forEach(draft => {
+
+            const card = document.createElement("div");
+
+            card.className = "draft-card";
+            card.tabIndex = 0;
+            card.setAttribute("role", "button");
+
+            card.setAttribute(
+                "aria-label",
+                "Open " + (draft.title || "Untitled Draft")
+            );
+
+
+            const title = document.createElement("p");
+
+            title.className = "draft-title";
+            title.textContent = draft.title || "Untitled Draft";
+
+
+            const wordCount = document.createElement("p");
+
+            wordCount.className = "word-count";
+            wordCount.textContent =
+                "Word count: " + countWords(draft.content);
+
+
+            const actions = document.createElement("div");
+
+            actions.className = "draft-actions";
+
+
+            const renameButton = document.createElement("button");
+
+            renameButton.type = "button";
+            renameButton.className = "draft-action";
+            renameButton.textContent = "Rename";
+            renameButton.setAttribute(
+                "aria-label",
+                "Rename " + (draft.title || "Untitled Draft")
+            );
+
+
+            const deleteButton = document.createElement("button");
+
+            deleteButton.type = "button";
+            deleteButton.className = "draft-action";
+            deleteButton.textContent = "Delete";
+            deleteButton.setAttribute(
+                "aria-label",
+                "Delete " + (draft.title || "Untitled Draft")
+            );
+
+
+            actions.append(renameButton, deleteButton);
+
+            card.append(title, wordCount, actions);
+
+
+            card.addEventListener("click", () => {
+                openDraft(draft.id);
+            });
+
+
+            card.addEventListener("keydown", event => {
+
+                if (event.target !== card) return;
+
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openDraft(draft.id);
+                }
+
+            });
+
+
+            renameButton.addEventListener("click", event => {
+                event.stopPropagation();
+                renameDraft(draft.id);
+            });
+
+
+            deleteButton.addEventListener("click", event => {
+                event.stopPropagation();
+                deleteDraft(draft.id);
+            });
+
+
+            draftsContainer.appendChild(card);
+
+        });
+
+
+        const newCard = document.createElement("a");
+
+        newCard.className = "draft-card new-draft";
+        newCard.href = "new-drafts.html";
+        newCard.setAttribute("aria-label", "Create a new draft");
+        newCard.textContent = "+";
+
+        draftsContainer.appendChild(newCard);
+
+    }
+
+
+    function closeMenus() {
+        homeDropdown.classList.remove("show");
+        profileMenu.classList.remove("show");
+        settingsMenu.classList.remove("show");
+    }
+
+
+    homeButton.addEventListener("click", event => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isOpen = homeDropdown.classList.contains("show");
+
+        closeMenus();
+
+        if (!isOpen) {
+            homeDropdown.classList.add("show");
+        }
+
+    });
+
+
+    profileButton.addEventListener("click", event => {
+
+        event.stopPropagation();
+
+        const isOpen = profileMenu.classList.contains("show");
+
+        closeMenus();
+
+        if (!isOpen) {
+            profileMenu.classList.add("show");
+        }
+
+    });
+
+
+    settingsButton.addEventListener("click", event => {
+
+        event.stopPropagation();
+
+        const isOpen = settingsMenu.classList.contains("show");
+
+        closeMenus();
+
+        if (!isOpen) {
+            settingsMenu.classList.add("show");
+        }
+
+    });
+
+
+    document.addEventListener("click", event => {
+
+        if (
+            !homeDropdown.contains(event.target) &&
+            !homeButton.contains(event.target) &&
+            !profileMenu.contains(event.target) &&
+            !profileButton.contains(event.target) &&
+            !settingsMenu.contains(event.target) &&
+            !settingsButton.contains(event.target)
+        ) {
+            closeMenus();
+        }
+
+    });
+
+
+    function updateProfile() {
+
+        const currentUser = sessionStorage.getItem("masterTextUser");
+        const savedName = localStorage.getItem("masterTextName");
+
+        if (currentUser) {
+
+            profileName.textContent = savedName || currentUser;
+
+            loginLink.hidden = true;
+            logoutButton.hidden = false;
+
+        } else {
+
+            profileName.textContent = "Guest";
+
+            loginLink.hidden = false;
+            logoutButton.hidden = true;
+
+        }
+
+    }
+
+
+    logoutButton.addEventListener("click", () => {
+
+        sessionStorage.removeItem("masterTextUser");
+
+        window.location.href = "login.html";
+
+    });
+
+
+    function applySettings() {
+
+        const savedTheme =
+            localStorage.getItem("masterTextDarkMode");
+
+        const savedFontSize =
+            localStorage.getItem("masterTextFontSize") || "font-medium";
+
+        const validFontSizes = [
+            "font-small",
+            "font-medium",
+            "font-big"
+        ];
+
+        const selectedFontSize = validFontSizes.includes(savedFontSize)
+            ? savedFontSize
+            : "font-medium";
+
+
+        document.body.classList.toggle(
+            "dark-mode",
+            savedTheme === "true"
+        );
+
+
+        document.body.classList.remove(
+            "font-small",
+            "font-medium",
+            "font-big"
+        );
+
+        document.body.classList.add(selectedFontSize);
+
+        themeToggle.checked = savedTheme === "true";
+
+        fontSize.value = selectedFontSize;
+
+    }
+
+
+    themeToggle.addEventListener("change", () => {
+
+        localStorage.setItem(
+            "masterTextDarkMode",
+            themeToggle.checked ? "true" : "false"
+        );
+
+        applySettings();
+
+    });
+
+
+    fontSize.addEventListener("change", () => {
+
+        localStorage.setItem(
+            "masterTextFontSize",
+            fontSize.value
+        );
+
+        applySettings();
+
+    });
+
+
+    applySettings();
+    updateProfile();
+    displayDrafts();
+
+});
+</script>
+
+</body>
+</html>

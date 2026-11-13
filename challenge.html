@@ -1,0 +1,1438 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Challenges</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --ink: #263238;
+    --muted: #777777;
+    --border: #000000;
+    --background: #ffffff;
+    --surface: #f1f2f4;
+    --menu: #ffffff;
+    --font-scale: 1;
+}
+
+body {
+    margin: 0;
+    padding: 0 18px;
+    font-family: "Bell MT", Georgia, serif;
+    font-size: calc(16px * var(--font-scale));
+    background: var(--background);
+    color: var(--ink);
+    transition: background 0.2s, color 0.2s;
+}
+
+body.dark {
+    --ink: #ffffff;
+    --muted: #aaaaaa;
+    --border: #ffffff;
+    --background: #000000;
+    --surface: #171717;
+    --menu: #111111;
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button {
+    color: inherit;
+}
+
+/* HEADER */
+
+.site-header {
+    min-height: 82px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding: 0 15px;
+    gap: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 1.65em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.quill {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+}
+
+.main-nav > a,
+.nav-menu-link {
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.95em;
+    white-space: nowrap;
+}
+
+.main-nav > a:hover,
+.nav-menu-link:hover {
+    text-decoration: underline;
+}
+
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 28px;
+    left: 0;
+    width: 390px;
+    padding: 18px;
+    background: var(--menu);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    z-index: 30;
+}
+
+.nav-dropdown:hover .nav-dropdown-content,
+.nav-dropdown:focus-within .nav-dropdown-content {
+    display: block;
+}
+
+.dropdown-section h3 {
+    font-size: 1em;
+    margin: 0 0 10px;
+}
+
+.dropdown-section + .dropdown-section {
+    border-top: 1px solid var(--border);
+    margin-top: 13px;
+    padding-top: 13px;
+}
+
+.dropdown-section a {
+    display: block;
+    padding: 8px;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.dropdown-section a:hover {
+    background: var(--surface);
+}
+
+.dropdown-section strong,
+.dropdown-section span {
+    display: block;
+}
+
+.dropdown-section span {
+    font-size: 0.82em;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu-wrap {
+    position: relative;
+}
+
+.icon-button {
+    width: 39px;
+    height: 39px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 220px;
+    padding: 16px;
+    background: var(--menu);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    z-index: 40;
+}
+
+.dropdown.show {
+    display: block;
+}
+
+.dropdown p {
+    margin-top: 0;
+}
+
+.dropdown a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.dropdown a:hover {
+    text-decoration: underline;
+}
+
+.text-button {
+    display: block;
+    border: none;
+    padding: 0;
+    margin-top: 10px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.setting-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 13px;
+}
+
+.setting-line:last-child {
+    margin-bottom: 0;
+}
+
+.setting-column {
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.setting-column select {
+    width: 100%;
+}
+
+.dropdown select {
+    padding: 8px;
+    background: var(--background);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+}
+
+/* MAIN CONTENT */
+
+main {
+    max-width: 1050px;
+    width: 75%;
+    margin: 45px auto 0;
+}
+
+.page-heading {
+    font-size: 1.8em;
+    margin-bottom: 25px;
+}
+
+.question-title,
+.textbox-title {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
+
+.question-box {
+    min-height: 75px;
+    padding: 20px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface);
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* POEM SELECTION */
+
+.poem-select {
+    display: block;
+    width: 100%;
+    padding: 11px 12px;
+    margin-bottom: 22px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--background);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 1em;
+}
+
+.poem-box {
+    white-space: pre-line;
+    font-family: Georgia, serif;
+}
+
+/* WRITING AREA */
+
+.writing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.textbox-title {
+    margin: 0;
+}
+
+.timer-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+#timerControls {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.timer-button {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    padding: 7px 11px;
+    font-family: inherit;
+    font-size: 0.9em;
+}
+
+.timer-button:hover,
+.action-button:hover {
+    opacity: 0.8;
+}
+
+.timer {
+    font-size: 1.1em;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    user-select: none;
+}
+
+.timer:focus-visible {
+    outline: 2px solid var(--muted);
+    outline-offset: 4px;
+}
+
+.time-setup {
+    display: none;
+    position: absolute;
+    top: 43px;
+    right: 0;
+    width: 240px;
+    padding: 17px;
+    background: var(--menu);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    z-index: 20;
+}
+
+.time-setup.show {
+    display: block;
+}
+
+.time-setup input {
+    width: 100%;
+    padding: 9px;
+    margin: 10px 0;
+    background: var(--background);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+}
+
+.time-help {
+    font-size: 0.8em;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.time-setup button {
+    width: 100%;
+    padding: 9px;
+    margin-top: 8px;
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    background: var(--ink);
+    color: var(--background);
+    cursor: pointer;
+}
+
+.timer-actions {
+    display: none;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.timer-actions.show {
+    display: flex;
+}
+
+.timer-actions button {
+    padding: 7px 10px;
+    font-size: 0.85em;
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    height: 250px;
+    padding: 12px;
+    resize: vertical;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--background);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 1em;
+    line-height: 1.5;
+    outline: none;
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+    border-color: var(--muted);
+}
+
+textarea:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.word-counter {
+    text-align: right;
+    font-size: 0.85em;
+    margin-top: 8px;
+}
+
+.action-button {
+    padding: 9px 13px;
+    border-radius: 4px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--background);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95em;
+}
+
+.action-button.secondary {
+    background: transparent;
+    color: var(--ink);
+}
+
+/* REMINDERS */
+
+.time-reminder {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 95px;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    background: #fff4b8;
+    color: #333333;
+    font-size: 0.95em;
+    border: 1px solid #e6d98d;
+    border-radius: 4px;
+    z-index: 100;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+.time-reminder.show {
+    display: block;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding: 15px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* FONT SIZE */
+
+body.font-small {
+    --font-scale: 0.9;
+}
+
+body.font-medium {
+    --font-scale: 1;
+}
+
+body.font-big {
+    --font-scale: 1.15;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+    .site-header {
+        grid-template-columns: 1fr auto;
+        padding: 15px 5px;
+        gap: 15px;
+    }
+
+    .main-nav {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .header-actions {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    main {
+        width: 95%;
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    body {
+        padding: 0 10px;
+    }
+
+    .brand {
+        font-size: 1.35em;
+    }
+
+    .writing-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .timer-area {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .time-setup {
+        left: 0;
+        right: auto;
+    }
+
+    .nav-dropdown-content {
+        left: -30px;
+        width: min(90vw, 390px);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <a class="brand" href="home.html">
+        <svg class="quill" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M26.8 3.2C17.4 3.5 8.1 8.3 7.2 17.1c-.3 2.7.8 4.7 2.5 5.9C17.4 19.1 24.2 11.5 26.8 3.2Z"
+                fill="none" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M4.2 28.1c4.3-7.7 10.4-13.8 18.7-20.2M9.5 22.9l-1.2-6.1M13.4 18.8l5.7 1.1"
+                fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        <span>MasterText</span>
+    </a>
+
+    <nav class="main-nav">
+
+        <div class="nav-dropdown">
+            <a href="home.html" class="nav-menu-link">Home</a>
+
+            <div class="nav-dropdown-content">
+
+                <div class="dropdown-section">
+                    <h3>Learning Activities</h3>
+                    
+                    <a href="home.html">
+                        <strong>Home Page</strong>
+                        <span>Where it The learning all starts.</span>
+                    </a>
+
+                    <a href="models.html">
+                        <strong>Model Answers</strong>
+                        <span>Explore examples of different writing text types.</span>
+                    </a>
+
+                    <a href="guides.html">
+                        <strong>English Guides</strong>
+                        <span>Learn about grammar, vocabulary and writing techniques.</span>
+                    </a>
+
+                    <a href="Do's and Don'ts.html">
+                        <strong>Dos and Don'ts</strong>
+                        <span>Discover useful ways to improve your writing.</span>
+                    </a>
+
+                    <a href="challenge.html">
+                        <strong>Writing Challenges</strong>
+                        <span>Challenge yourself with different writing tasks.</span>
+                    </a>
+                </div>
+
+                <div class="dropdown-section">
+                    <h3>My Writing</h3>
+
+                    <a href="new-drafts.html">
+                        <strong>Create a New Draft</strong>
+                        <span>Start writing and develop your own ideas.</span>
+                    </a>
+
+                    <a href="drafts.html">
+                        <strong>My Drafts</strong>
+                        <span>View and continue working on your saved writing.</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contacts.html">Contact</a>
+
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="menu-wrap">
+            <button class="icon-button" id="profileButton" aria-label="Profile" type="button">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="3.5"/>
+                    <path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>
+                </svg>
+            </button>
+
+            <div class="dropdown profile-menu" id="profileMenu">
+                <p id="profileName">Guest</p>
+                <a href="login.html" id="loginLink">Log in</a>
+
+                <button type="button" id="logoutButton" class="text-button" hidden>
+                    Log out
+                </button>
+            </div>
+        </div>
+
+        <div class="menu-wrap">
+            <button class="icon-button" id="settingsButton" aria-label="Settings" type="button">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l-1.8 1.8a1.7 1.7 0 0 0-2-.3 1.7 1.7 0 0 0-1 1.5h-2.6a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-2 .3l-1.8-1.8a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H6.3v-2.6a1.7 1.7 0 0 0 1.7-1 1.7 1.7 0 0 0-.3-1.9l1.8-1.8a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5H15a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l1.8 1.8a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1v2.6a1.7 1.7 0 0 0-1.5 1Z"/>
+                </svg>
+            </button>
+
+            <div class="dropdown settings-menu" id="settingsMenu">
+
+                <div class="setting-line">
+                    <label for="themeToggle">Dark mode</label>
+                    <input type="checkbox" id="themeToggle">
+                </div>
+
+                <div class="setting-line setting-column">
+                    <label for="fontSize">Font size</label>
+
+                    <select id="fontSize">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</header>
+
+<main>
+
+    <h1 class="page-heading">Writing Challenge</h1>
+
+    <div class="question-title">Choose a poem</div>
+
+    <select id="poemSelect" class="poem-select" aria-label="Choose a poem">
+        <option value="">Select a poem to begin</option>
+        <option value="ozymandias">Ozymandias — Percy Bysshe Shelley</option>
+        <option value="tyger">The Tyger — William Blake</option>
+        <option value="world">The World Is Too Much with Us — William Wordsworth</option>
+    </select>
+
+    <div class="question-title">Analysis Question</div>
+
+    <div class="question-box" id="questionBox" aria-live="polite">
+        Select a poem from the dropdown to reveal its analysis question.
+    </div>
+
+    <div class="question-title">Selected Poem</div>
+
+    <div class="question-box poem-box" id="poemText" aria-live="polite">
+        Your selected poem will appear here.
+    </div>
+
+    <div class="writing-header">
+
+        <div class="textbox-title">Your Answer</div>
+
+        <div class="timer-area">
+
+            <div id="timerControls">
+                <button class="timer-button" id="timerButton" type="button" disabled>
+                    Set timer
+                </button>
+
+                <span class="timer" id="timerDisplay"
+                    title="Double-click to edit the timer"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Timer display. Double-click to edit.">
+                    00:00
+                </span>
+            </div>
+
+            <div class="timer-actions" id="timerActions">
+
+                <button class="action-button" id="addTimeButton" type="button">
+                    Add Time
+                </button>
+
+                <button class="action-button secondary" id="submitButton" type="button">
+                    Submit as Draft
+                </button>
+
+            </div>
+
+            <div class="time-setup" id="timeSetup">
+
+                <strong id="timeSetupTitle">Set your writing time</strong>
+
+                <input
+                    type="text"
+                    id="timeInput"
+                    placeholder="25:00"
+                    value="25:00"
+                    aria-label="Timer duration in minutes and seconds"
+                >
+
+                <div class="time-help">
+                    Enter your time in MM:SS format.
+                    For example, 25:00 means 25 minutes.
+                </div>
+
+                <button type="button" id="startTimerButton">
+                    Start Timer
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <textarea
+        id="answer"
+        placeholder="Enter your answer here..."
+        disabled
+    ></textarea>
+
+    <div class="word-counter" id="wordCounter">
+        0 words
+    </div>
+
+</main>
+
+<div class="time-reminder" id="timeReminder" role="status" aria-live="polite">
+    Time reminder
+</div>
+
+<footer>
+    © 2026 MasterText Website
+</footer>
+
+<script>
+"use strict";
+
+/* ELEMENTS */
+
+const answer = document.getElementById("answer");
+const wordCounter = document.getElementById("wordCounter");
+
+const timerButton = document.getElementById("timerButton");
+const timerDisplay = document.getElementById("timerDisplay");
+const timerControls = document.getElementById("timerControls");
+const timerActions = document.getElementById("timerActions");
+
+const timeSetup = document.getElementById("timeSetup");
+const timeSetupTitle = document.getElementById("timeSetupTitle");
+const timeInput = document.getElementById("timeInput");
+const startTimerButton = document.getElementById("startTimerButton");
+
+const addTimeButton = document.getElementById("addTimeButton");
+const submitButton = document.getElementById("submitButton");
+const timeReminder = document.getElementById("timeReminder");
+
+const poemSelect = document.getElementById("poemSelect");
+const questionBox = document.getElementById("questionBox");
+const poemText = document.getElementById("poemText");
+
+/* PROFILE AND SETTINGS */
+
+const profileButton = document.getElementById("profileButton");
+const settingsButton = document.getElementById("settingsButton");
+const profileMenu = document.getElementById("profileMenu");
+const settingsMenu = document.getElementById("settingsMenu");
+
+const profileName = document.getElementById("profileName");
+const loginLink = document.getElementById("loginLink");
+const logoutButton = document.getElementById("logoutButton");
+
+const themeToggle = document.getElementById("themeToggle");
+const fontSizeSelect = document.getElementById("fontSize");
+
+/* STORAGE */
+
+function getStoredValue(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (error) {
+        return null;
+    }
+}
+
+function setStoredValue(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+/* POEM SELECTION */
+
+const poemChallenges = {
+    ozymandias: {
+        question: "How does Shelley use imagery, irony and the ruined statue to explore the temporary nature of power and human achievement?",
+        poem: `I met a traveller from an antique land,
+Who said—“Two vast and trunkless legs of stone
+Stand in the desert. . . . Near them, on the sand,
+Half sunk a shattered visage lies, whose frown,
+And wrinkled lip, and sneer of cold command,
+Tell that its sculptor well those passions read
+Which yet survive, stamped on these lifeless things,
+The hand that mocked them, and the heart that fed;
+And on the pedestal, these words appear:
+My name is Ozymandias, King of Kings;
+Look on my Works, ye Mighty, and despair!
+Nothing beside remains. Round the decay
+Of that colossal Wreck, boundless and bare
+The lone and level sands stretch far away.”`
+    },
+
+    tyger: {
+        question: "How does Blake use rhetorical questions, imagery and contrasts to explore the relationship between creation, beauty and fear?",
+        poem: `Tyger Tyger, burning bright,
+In the forests of the night;
+What immortal hand or eye,
+Could frame thy fearful symmetry?
+
+In what distant deeps or skies.
+Burnt the fire of thine eyes?
+On what wings dare he aspire?
+What the hand, dare seize the fire?
+
+And what shoulder, & what art,
+Could twist the sinews of thy heart?
+And when thy heart began to beat,
+What dread hand? & what dread feet?
+
+What the hammer? what the chain,
+In what furnace was thy brain?
+What the anvil? what dread grasp,
+Dare its deadly terrors clasp!
+
+When the stars threw down their spears
+And water'd heaven with their tears;
+Did he smile his work to see?
+Did he who made the Lamb make thee?
+
+Tyger Tyger burning bright,
+In the forests of the night:
+What immortal hand or eye,
+Dare frame thy fearful symmetry?`
+    },
+
+    world: {
+        question: "How does Wordsworth use personification, contrast and natural imagery to criticise materialism and present the value of a connection with nature?",
+        poem: `The world is too much with us; late and soon,
+Getting and spending, we lay waste our powers;—
+Little we see in Nature that is ours;
+We have given our hearts away, a sordid boon!
+This Sea that bares her bosom to the moon;
+The winds that will be howling at all hours,
+And are up-gathered now like sleeping flowers;
+For this, for everything, we are out of tune;
+It moves us not.—Great God! I’d rather be
+A Pagan suckled in a creed outworn;
+So might I, standing on this pleasant lea,
+Have glimpses that would make me less forlorn;
+Have sight of Proteus rising from the sea;
+Or hear old Triton blow his wreathèd horn.`
+    }
+};
+
+poemSelect.addEventListener("change", function() {
+    const selectedPoem = poemChallenges[poemSelect.value];
+
+    if (!selectedPoem) {
+        questionBox.textContent = "Select a poem from the dropdown to reveal its analysis question.";
+        poemText.textContent = "Your selected poem will appear here.";
+        answer.disabled = true;
+        timerButton.disabled = true;
+        return;
+    }
+
+    questionBox.textContent = selectedPoem.question;
+    poemText.textContent = selectedPoem.poem;
+
+    answer.disabled = !timerStarted || timeLeft <= 0;
+    timerButton.disabled = false;
+});
+
+/* PROFILE */
+
+function loadProfile() {
+    let savedName = getStoredValue("masterTextName");
+
+    try {
+        savedName = savedName || sessionStorage.getItem("masterTextUser");
+    } catch (error) {
+        savedName = savedName || null;
+    }
+
+    profileName.textContent = savedName || "Guest";
+    loginLink.hidden = Boolean(savedName);
+    logoutButton.hidden = !savedName;
+}
+
+logoutButton.addEventListener("click", function() {
+    try {
+        localStorage.removeItem("masterTextName");
+        sessionStorage.removeItem("masterTextUser");
+    } catch (error) {
+        alert("Unable to log out. Please try again.");
+    }
+
+    loadProfile();
+    profileMenu.classList.remove("show");
+});
+
+/* MENUS */
+
+profileButton.addEventListener("click", function(event) {
+    event.stopPropagation();
+    profileMenu.classList.toggle("show");
+    settingsMenu.classList.remove("show");
+});
+
+settingsButton.addEventListener("click", function(event) {
+    event.stopPropagation();
+    settingsMenu.classList.toggle("show");
+    profileMenu.classList.remove("show");
+});
+
+/* THEME */
+
+function applyTheme() {
+    const isDark = getStoredValue("masterTextDarkMode") === "true";
+
+    document.body.classList.toggle("dark", isDark);
+    themeToggle.checked = isDark;
+}
+
+themeToggle.addEventListener("change", function() {
+    const isDark = themeToggle.checked;
+
+    document.body.classList.toggle("dark", isDark);
+
+    if (!setStoredValue("masterTextDarkMode", String(isDark))) {
+        alert("Your theme preference could not be saved.");
+    }
+});
+
+/* FONT SIZE */
+
+function applyFontSize() {
+    const savedSize = getStoredValue("masterTextFontSize");
+
+    const validSizes = ["font-small", "font-medium", "font-big"];
+
+    const selectedSize = validSizes.includes(savedSize)
+        ? savedSize
+        : "font-medium";
+
+    document.body.classList.remove(...validSizes);
+    document.body.classList.add(selectedSize);
+
+    document.documentElement.style.setProperty(
+        "--font-scale",
+        selectedSize === "font-small" ? "0.9" :
+        selectedSize === "font-big" ? "1.15" : "1"
+    );
+
+    fontSizeSelect.value =
+        selectedSize === "font-small" ? "small" :
+        selectedSize === "font-big" ? "large" : "medium";
+}
+
+fontSizeSelect.addEventListener("change", function() {
+    const selectedSize =
+        fontSizeSelect.value === "small" ? "font-small" :
+        fontSizeSelect.value === "large" ? "font-big" :
+        "font-medium";
+
+    if (!setStoredValue("masterTextFontSize", selectedSize)) {
+        alert("Your font-size preference could not be saved.");
+    }
+
+    applyFontSize();
+});
+
+/* TIMER VARIABLES */
+
+let timeLeft = 0;
+let timerInterval = null;
+let timerRunning = false;
+let timerStarted = false;
+let addTimeMode = false;
+let reminderTimeout = null;
+let lastReminder = null;
+
+/* TIMER SETUP */
+
+function openTimeSetup(isAddingTime = false, currentTime = null) {
+    addTimeMode = isAddingTime;
+
+    timeSetupTitle.textContent = isAddingTime
+        ? "Add more writing time"
+        : "Set your writing time";
+
+    if (currentTime !== null) {
+        const minutes = Math.floor(currentTime / 60);
+        const seconds = currentTime % 60;
+
+        timeInput.value =
+            String(minutes).padStart(2, "0") + ":" +
+            String(seconds).padStart(2, "0");
+    } else {
+        timeInput.value = isAddingTime ? "10:00" : "25:00";
+    }
+
+    timeSetup.classList.add("show");
+    timeInput.focus();
+    timeInput.select();
+}
+
+function closeTimeSetup() {
+    timeSetup.classList.remove("show");
+}
+
+/* TIMER BUTTON */
+
+timerButton.addEventListener("click", function() {
+    if (timerRunning) {
+        pauseTimer();
+    } else if (timerStarted && timeLeft > 0) {
+        resumeTimer();
+    } else {
+        openTimeSetup(false);
+    }
+});
+
+/* DOUBLE-CLICK TIMER TO EDIT */
+
+timerDisplay.addEventListener("dblclick", function() {
+    if (timerButton.disabled) return;
+
+    if (timerRunning) {
+        pauseTimer();
+    }
+
+    openTimeSetup(false, timeLeft);
+});
+
+timerDisplay.addEventListener("keydown", function(event) {
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+
+        if (timerRunning) {
+            pauseTimer();
+        }
+
+        if (!timerButton.disabled) {
+            openTimeSetup(false, timeLeft);
+        }
+    }
+});
+
+startTimerButton.addEventListener("click", startTimer);
+
+timeInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        startTimer();
+    }
+
+    if (event.key === "Escape") {
+        closeTimeSetup();
+    }
+});
+
+/* START OR ADD TIME */
+
+function startTimer() {
+    const match = timeInput.value.trim().match(/^(\d{1,3}):([0-5]\d)$/);
+
+    if (!match) {
+        alert("Enter a valid time in MM:SS format, for example 25:00.");
+        return;
+    }
+
+    const minutes = Number(match[1]);
+    const seconds = Number(match[2]);
+    const totalSeconds = minutes * 60 + seconds;
+
+    if (totalSeconds <= 0) {
+        alert("Enter a time greater than zero.");
+        return;
+    }
+
+    clearInterval(timerInterval);
+    clearTimeout(reminderTimeout);
+
+    if (addTimeMode) {
+        timeLeft += totalSeconds;
+    } else {
+        timeLeft = totalSeconds;
+        lastReminder = null;
+    }
+
+    timerStarted = true;
+    timerRunning = false;
+
+    answer.disabled = false;
+
+    timerActions.classList.remove("show");
+    timerControls.style.display = "flex";
+
+    timeReminder.classList.remove("show");
+
+    closeTimeSetup();
+
+    updateTimerDisplay();
+    runTimer();
+}
+
+/* RUN TIMER */
+
+function runTimer() {
+    clearInterval(timerInterval);
+
+    timerRunning = true;
+    timerButton.textContent = "Pause timer";
+
+    timerInterval = setInterval(function() {
+        if (!timerRunning) return;
+
+        timeLeft--;
+
+        updateTimerDisplay();
+        checkReminders();
+
+        if (timeLeft <= 0) {
+            finishTimer();
+        }
+    }, 1000);
+}
+
+/* TIMER DISPLAY */
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+
+    timerDisplay.textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+}
+
+/* PAUSE */
+
+function pauseTimer() {
+    if (!timerRunning) return;
+
+    clearInterval(timerInterval);
+
+    timerRunning = false;
+    timerButton.textContent = "Resume timer";
+}
+
+/* RESUME */
+
+function resumeTimer() {
+    if (timeLeft <= 0 || timerRunning) return;
+
+    closeTimeSetup();
+    runTimer();
+}
+
+/* REMINDERS */
+
+function checkReminders() {
+    let message = "";
+    let reminderKey = "";
+
+    const minutesLeft = Math.ceil(timeLeft / 60);
+
+    if (timeLeft > 600 && timeLeft % 1200 === 0) {
+        message = "You have " + minutesLeft +
+            " minutes remaining. Keep going!";
+
+        reminderKey = "interval-" + timeLeft;
+    }
+
+    if ([10, 5, 2].includes(minutesLeft) && timeLeft % 60 === 0) {
+        message = "You have " + minutesLeft + " minutes remaining!";
+        reminderKey = "final-" + minutesLeft;
+    }
+
+    if (message && lastReminder !== reminderKey) {
+        lastReminder = reminderKey;
+        showReminder(message, 5000);
+    }
+}
+
+function showReminder(message, duration) {
+    clearTimeout(reminderTimeout);
+
+    timeReminder.textContent = message;
+    timeReminder.classList.add("show");
+
+    reminderTimeout = setTimeout(function() {
+        timeReminder.classList.remove("show");
+    }, duration);
+}
+
+/* TIMER FINISHED */
+
+function finishTimer() {
+    clearInterval(timerInterval);
+    clearTimeout(reminderTimeout);
+
+    timerRunning = false;
+    timerStarted = false;
+    timeLeft = 0;
+
+    updateTimerDisplay();
+
+    answer.disabled = true;
+
+    timeReminder.classList.remove("show");
+
+    timerControls.style.display = "none";
+    timerActions.classList.add("show");
+
+    closeTimeSetup();
+
+    timerButton.textContent = "Set timer";
+}
+
+/* ADD MORE TIME */
+
+addTimeButton.addEventListener("click", function() {
+    openTimeSetup(true);
+});
+
+/* WORD COUNTER */
+
+function updateWordCount() {
+    const content = answer.value.trim();
+
+    const words = content
+        ? content.split(/\s+/).length
+        : 0;
+
+    wordCounter.textContent =
+        words + (words === 1 ? " word" : " words");
+}
+
+answer.addEventListener("input", updateWordCount);
+
+/* DRAFTS */
+
+function getDrafts() {
+    try {
+        const storedDrafts = JSON.parse(
+            localStorage.getItem("masterTextDrafts") || "[]"
+        );
+
+        return Array.isArray(storedDrafts) ? storedDrafts : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function generateDraftId(drafts) {
+    let id;
+
+    do {
+        id = "challenge-" + Date.now() + "-" +
+            Math.random().toString(36).slice(2, 10);
+    } while (drafts.some(draft => String(draft.id) === id));
+
+    return id;
+}
+
+/* SUBMIT AS DRAFT */
+
+submitButton.addEventListener("click", function() {
+    const content = answer.value.trim();
+
+    if (!content) {
+        alert("Please write an answer before submitting.");
+        return;
+    }
+
+    const drafts = getDrafts();
+
+    const selectedPoem = poemSelect.options[poemSelect.selectedIndex].text;
+
+    const draft = {
+        id: generateDraftId(drafts),
+        title: "Challenge Draft - " + selectedPoem,
+        content: content,
+        wordCount: content.split(/\s+/).length,
+        dateModified: new Date().toLocaleDateString()
+    };
+
+    drafts.push(draft);
+
+    if (!setStoredValue("masterTextDrafts", JSON.stringify(drafts))) {
+        alert("Your draft could not be saved. Please try again.");
+        return;
+    }
+
+    window.location.href = "drafts.html";
+});
+
+/* CLOSE MENUS WHEN CLICKING OUTSIDE */
+
+document.addEventListener("click", function(event) {
+
+    if (
+        !profileMenu.contains(event.target) &&
+        !profileButton.contains(event.target)
+    ) {
+        profileMenu.classList.remove("show");
+    }
+
+    if (
+        !settingsMenu.contains(event.target) &&
+        !settingsButton.contains(event.target)
+    ) {
+        settingsMenu.classList.remove("show");
+    }
+
+    if (
+        !timeSetup.contains(event.target) &&
+        !timerButton.contains(event.target) &&
+        !addTimeButton.contains(event.target) &&
+        !timerDisplay.contains(event.target)
+    ) {
+        closeTimeSetup();
+    }
+});
+
+/* LOAD SETTINGS */
+
+function loadPageSettings() {
+    applyTheme();
+    applyFontSize();
+    loadProfile();
+}
+
+loadPageSettings();
+updateWordCount();
+
+</script>
+
+</body>
+</html>
